@@ -4,10 +4,13 @@
  */
 package br.dev.riquelme.OSApiApplication.domain.service;
 
+import br.dev.riquelme.OSApiApplication.domain.model.Cliente;
 import br.dev.riquelme.OSApiApplication.domain.model.OrdemServico;
 import br.dev.riquelme.OSApiApplication.domain.model.StatusOrdemServico;
+import br.dev.riquelme.OSApiApplication.domain.repository.ClienteRepository;
 import br.dev.riquelme.OSApiApplication.domain.repository.OrdemServicoRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +20,41 @@ public class OrdemServicoService {
     @Autowired
     private OrdemServicoRepository ordemServicoRepository;
     
-    public OrdemServico criar(OrdemServico ordemServico) {
+    @Autowired
+    private ClienteRepository clienteRepository;
+    
+    public OrdemServico criar(OrdemServico ordemServico) 
+    {
         ordemServico.setStatus(StatusOrdemServico.ABERTA);
         ordemServico.setDataAbertura(LocalDateTime.now());
         
         return ordemServicoRepository.save(ordemServico);
+    }
+    
+    public OrdemServico salvar(OrdemServico ordemServico) {
+        
+        OrdemServico ordemAtual = ordemServicoRepository.findById(ordemServico.getId())
+                .orElseThrow(() -> new RuntimeException("Ordem não encontrada"));
+        
+        Long clienteId = ordemServico.getCliente().getId();
+        
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+        
+        ordemAtual.setCliente(cliente);
+        ordemAtual.setDescricao(ordemServico.getDescricao());
+        ordemAtual.setPreco(ordemServico.getPreco());
+                
+        
+        return ordemServicoRepository.save(ordemAtual);
+    }
+    
+    public void excluir(Long id) {
+        ordemServicoRepository.deleteById(id);
+    }
+    
+    public List<OrdemServico> listarPorCliente(Long clienteId) {
+        
+        return ordemServicoRepository.findByClienteId(clienteId);
     }
 }

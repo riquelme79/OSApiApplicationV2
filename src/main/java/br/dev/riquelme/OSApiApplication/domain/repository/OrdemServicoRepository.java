@@ -6,8 +6,15 @@ package br.dev.riquelme.OSApiApplication.domain.repository;
 
 
 import br.dev.riquelme.OSApiApplication.domain.model.OrdemServico;
+import br.dev.riquelme.OSApiApplication.domain.model.StatusOrdemServico;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OrdemServicoRepository extends JpaRepository<OrdemServico, Long>{
     
+    List<OrdemServico> findByDataAbertura(LocalDateTime dataAbertura);
+    List<OrdemServico> findByDataFinalizacao (LocalDateTime dataFinalizacao);
+    List<OrdemServico> findByStatus (StatusOrdemServico status);
+    List<OrdemServico> findByClienteId (Long clienteId);
 }

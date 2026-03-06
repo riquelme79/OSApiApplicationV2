@@ -14,6 +14,7 @@ import jakarta.persistence.EnumType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import br.dev.riquelme.OSApiApplication.domain.model.Cliente;
+import jakarta.persistence.Column;
 import java.util.Objects;
 
 @Entity
@@ -31,9 +32,7 @@ public class OrdemServico {
     @Enumerated(EnumType.STRING)
     private StatusOrdemServico status;
     
-    private LocalDateTime dataAbertura;
-    private LocalDateTime dataFinalizacao;
-
+    
     public OrdemServico() {
     }
 
@@ -101,8 +100,8 @@ public class OrdemServico {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 53 * hash + Objects.hashCode(this.id);
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -121,4 +120,6 @@ public class OrdemServico {
         return Objects.equals(this.id, other.id);
     }
     
+    private LocalDateTime dataAbertura;
+    private LocalDateTime dataFinalizacao;
 }
